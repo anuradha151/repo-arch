@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Service\CustomerService;
+use App\Service\Impl\CustomerServiceImpl;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(CustomerService::class,CustomerServiceImpl::class);
     }
 
     /**

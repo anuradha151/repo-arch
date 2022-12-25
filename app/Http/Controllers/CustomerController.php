@@ -3,10 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Service\CustomerService;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 class CustomerController extends Controller
 {
+
+    public function __construct(CustomerService $customerService)
+    {
+        $this->customerService = $customerService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +24,8 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        //
+        return $this->customerService->findAll();
+
     }
 
     /**
@@ -35,13 +46,13 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        $customer = new Customer();
-        $customer->name = $request->input('name');
-        $customer->address = $request->input('address');
-        $customer->contact = $request->input('contact');
-        $customer->email = $request->input('email');
-        $customer->save();
-        return $customer;
+
+        try {
+            return $this->customerService->save($request);
+        } catch (RuntimeException $ex) {
+            return  response()->json($ex->getMessage(), 400); ;
+        }
+
     }
 
     /**
@@ -52,7 +63,7 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-        //
+        return $this->customerService->findById($id);
     }
 
     /**

@@ -19,4 +19,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// customer
+Route::get('/customer', [CustomerController::class, 'index'])->name('customer.index');
+Route::get('/customer/by/{id}', [CustomerController::class, 'show'])->name('customer.show');
 Route::post('/customer', [CustomerController::class, 'store'])->name('customer.store');
+
+// item

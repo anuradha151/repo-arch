@@ -2,7 +2,14 @@
 
 namespace App\Exceptions;
 
+use Carbon\Carbon;
+use Exception;
+use http\Message;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use RuntimeException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -34,8 +41,14 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (Exception $exception,$request) {
+            if ($request->wantsJson()){
+                $response['exception'] = get_class($exception);
+                $response['message'] = $exception->getMessage();
+                $response['timestamp'] = Carbon::now();
+                return response()->json($response,400);
+            }
+
         });
     }
 }
